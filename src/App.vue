@@ -1,11 +1,13 @@
 <script>
 import getMergeSortAnimations from './components/mergesortalgo.js';
+import getanimationbubble from './components/bubblesortalgo.js';
 export default {
   name: 'App',
     data() {
         return {
             arr: [],
             speed:9,
+            isDisabled:false,
         }
     },
   mounted() {
@@ -17,8 +19,49 @@ export default {
         }
     },
     methods:{
-        mergesort(){
-            const animations = getMergeSortAnimations(this.arr);
+        disable(){
+           this.isDisabled=!this.isDisabled;
+           console.log("disable");
+          const ab=  document.getElementsByClassName("reset-arr");
+          if(this.isDisabled){
+          for(var o=0;o<ab.length;o++){
+              ab[o].classList.add("disabled");
+          }
+          }
+            else{
+                for(var o=0;o<ab.length;o++){
+                ab[o].classList.remove("disabled");
+            }
+            }
+        },
+        bubblesort(dis){
+            const animations = getanimationbubble(this.arr.slice());
+            const arrayBars = document.getElementsByClassName("arr-bar");
+            for (let i = 0; i < animations.length; i++) {
+                const isColorChange = (i % 4 === 0) || (i % 4 === 1);
+                if (isColorChange) {
+                    const [barOneIdx, barTwoIdx] = animations[i];
+                    const barOneStyle = arrayBars[barOneIdx].style;
+                    const barTwoStyle = arrayBars[barTwoIdx].style;
+                    const color = i % 4 === 0 ? 'red' : 'turquoise';
+                    setTimeout(() => {
+                        barOneStyle.backgroundColor = color;
+                        barTwoStyle.backgroundColor = color;
+                    }, i * 2300/this.speed);
+                } 
+                else {
+                    setTimeout(() => {
+                        const [barOneIdx, newHeight] = animations[i];
+                        const barOneStyle = arrayBars[barOneIdx].style;
+                        barOneStyle.height = `${newHeight}px`;
+                    }, i * 2300/this.speed);
+                }
+            }
+          //  dis();
+        },
+
+        mergesort(dis){
+            const animations = getMergeSortAnimations(this.arr.slice());
             for (let i = 0; i < animations.length; i++) {
                 const arrayBars = document.getElementsByClassName("arr-bar");
                 const isColorChange = i % 3 !== 2;
@@ -37,8 +80,9 @@ export default {
                         arrayBars[barOneIdx].style.height = `${newHeight}px`;
                     }, i * 2300/ this.speed);
                 }
+               
             }
-
+            
         },
         randomnumber(a,b){
             return Math.floor((Math.random()+1) * 200-b+a);
@@ -58,19 +102,21 @@ export default {
 <template>
     <navbar class="navbar">
         <div class="buttons">
-            <button @click="inarr" class="reset-arr">
+            <button @click="inarr" class="reset-arr" :class="{disabled: isDisabled}">
                 reset
             </button>
-            <button @click="mergesort" class="reset-arr">
+            <button @click="mergesort(disable);disable()" class="reset-arr" :class="{disabled: isDisabled}"
+                :disabled="isDisabled">
                 merge sort
             </button>
-            <button @click="mergesort" class="reset-arr">
+            <button @click="bubblesort(disable);disable()" class="reset-arr" :class="{disabled: isDisabled}"
+                :disabled="isDisabled">
                 bubble sort
             </button>
-            <button @click="mergesort" class="reset-arr">
+            <button @click="blank" class="reset-arr" :class="{disabled: isDisabled}" :disabled="isDisabled">
                 selection sort
             </button>
-            <button @click="mergesort" class="reset-arr">
+            <button @click="blank" class="reset-arr" :class="{disabled: isDisabled}" :disabled="isDisabled">
                 heap sort
             </button>
         </div>
@@ -91,7 +137,7 @@ export default {
 </template>
 
 <style>
-
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Source+Code+Pro&display=swap');
 *{
     margin: 0;
     padding: 0;
@@ -117,16 +163,31 @@ export default {
     background-color: turquoise;
     width:5px;
 }
+
 .reset-arr{
     top:0;
     left:0;
-    width:100px;
+    width:170px;
     height:50px;
     background-color: turquoise;
     color:white;
     border-radius:10px;
     font-size:1.2rem;
     text-align:center;
+    font-family: 'Source Code Pro', monospace;
+    transition:all 0.2s;
+}
+.reset-arr:hover{
+   background-color:black;
+   color:turquoise;
+}
+.disabled{
+    background-color: rgb(255, 255, 255);
+    color:rgb(0, 0, 0);
+}
+.disabled:hover{
+    background-color: rgb(255, 255, 255);
+    color:rgb(0, 0, 0);
 }
 .navbar{
     width:100vw;
@@ -143,6 +204,7 @@ export default {
     color:rgb(255, 255, 255);
     font-size:2vw;
     text-align:center;
+    border-radius:10px;
     display:flex;
     flex-direction: column;
     align-content: center;
@@ -152,7 +214,6 @@ export default {
 }
 footer{
     width:100vw;
-   
     background-color: rgb(0, 0, 0);
     display:flex;
     bottom:0;
@@ -162,6 +223,33 @@ footer{
     align-items:center;
     color:white;
     font-size:1.2rem;
+    font-family: 'Source Code Pro', monospace;
+
+}
+/*Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+        overflow: hidden;
+        -webkit-appearance: none;
+        background-color: #000000;
+    }
+
+    input[type='range']::-webkit-slider-runnable-track {
+        height: 10px;
+        -webkit-appearance: none;
+        color: #13bba4;
+        margin-top: -1px;
+    }
+
+    input[type='range']::-webkit-slider-thumb {
+        width: 15px;
+        border-radius:10px;
+        height:10px;
+        -webkit-appearance: none;
+        height: 10px;
+        cursor: ew-resize;
+        background-color:white;
+    }
 
 }
 </style>
