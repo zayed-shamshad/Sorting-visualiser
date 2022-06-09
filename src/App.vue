@@ -6,8 +6,9 @@ export default {
     data() {
         return {
             arr: [],
-            speed:9,
+            speed:125,
             isDisabled:false,
+            sortalgo:"",
         }
     },
   mounted() {
@@ -19,22 +20,29 @@ export default {
         }
     },
     methods:{
-        disable(){
+        disable()
+        {
            this.isDisabled=!this.isDisabled;
-           console.log("disable");
-          const ab=  document.getElementsByClassName("reset-arr");
-          if(this.isDisabled){
-          for(var o=0;o<ab.length;o++){
-              ab[o].classList.add("disabled");
-          }
-          }
-            else{
-                for(var o=0;o<ab.length;o++){
-                ab[o].classList.remove("disabled");
-            }
-            }
         },
-        bubblesort(dis){
+        setvalue(algo)
+        {
+            this.sortalgo=algo;
+          
+        },
+       sort()
+        {
+            this.disable();
+            if(this.sortalgo=="merge"){
+                this.mergesort();
+            
+            }
+            else if(this.sortalgo=="bubble"){
+                this.bubblesort();
+            }
+          
+        },
+        bubblesort()
+        {
             const animations = getanimationbubble(this.arr.slice());
             const arrayBars = document.getElementsByClassName("arr-bar");
             for (let i = 0; i < animations.length; i++) {
@@ -47,7 +55,7 @@ export default {
                     setTimeout(() => {
                         barOneStyle.backgroundColor = color;
                         barTwoStyle.backgroundColor = color;
-                    }, i * 2300/this.speed);
+                    }, i* 2300/this.speed);
                 } 
                 else {
                     setTimeout(() => {
@@ -57,11 +65,10 @@ export default {
                     }, i * 2300/this.speed);
                 }
             }
-          //  dis();
         },
-
-        mergesort(dis){
-            const animations = getMergeSortAnimations(this.arr.slice());
+     mergesort()
+        {
+            const animations =getMergeSortAnimations(this.arr.slice());
             for (let i = 0; i < animations.length; i++) {
                 const arrayBars = document.getElementsByClassName("arr-bar");
                 const isColorChange = i % 3 !== 2;
@@ -82,46 +89,56 @@ export default {
                 }
                
             }
-            
+
         },
-        randomnumber(a,b){
+        randomnumber(a,b)
+        {
             return Math.floor((Math.random()+1) * 200-b+a);
         },
-        inarr(){
+        inarr()
+        {
+        this.isDisabled=false;
         this.arr=[];
         for(var i=0;i<this.speed;i++){
            this.arr.push(this.randomnumber(i,i+3));
         }
         }
         ,
+        addclass(id){
+            const k=document.getElementsByClassName("reset-arr");
+            for(var i=0;i<k.length;i++){
+                k[i].classList.remove("selected");
+            }
+           document.getElementById(id).classList.add("selected");
+        }
        
     },
 }
 </script>
-
 <template>
     <navbar class="navbar">
         <div class="buttons">
-            <button @click="inarr" class="reset-arr" :class="{disabled: isDisabled}">
+            <button @click="inarr" class="reset-arr" :class="{disabled: isDisabled}" :disabled='isDisabled'>
                 reset
             </button>
-            <button @click="mergesort(disable);disable()" class="reset-arr" :class="{disabled: isDisabled}"
-                :disabled="isDisabled">
-                merge sort
+            <button @click="setvalue('merge');addclass('merge')" class="reset-arr" id="merge">
+                merge
             </button>
-            <button @click="bubblesort(disable);disable()" class="reset-arr" :class="{disabled: isDisabled}"
-                :disabled="isDisabled">
-                bubble sort
+            <button @click="setvalue('bubble');addclass('bubble')" class="reset-arr" id="bubble">
+                bubble
             </button>
-            <button @click="blank" class="reset-arr" :class="{disabled: isDisabled}" :disabled="isDisabled">
-                selection sort
+            <button @click="setvalue('bubble');addclass('selection')" class="reset-arr" id="selection">
+                selection
             </button>
-            <button @click="blank" class="reset-arr" :class="{disabled: isDisabled}" :disabled="isDisabled">
-                heap sort
+            <button @click="setvalue('bubble');addclass('heap')" class="reset-arr" id="heap">
+                heap
+            </button>
+            <button @click="sort" class="sort-button" :class="{disabled: isDisabled}" :disabled="isDisabled">
+                sort
             </button>
         </div>
         <div class="slider">
-            <input slider type="range" min="9" max="230" v-model="speed" />
+            <input slider type="range" min="9" max="230" v-model="speed" v-bind:disabled="isDisabled" />
         </div>
     </navbar>
     <div class="arr-container">
@@ -138,6 +155,24 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Source+Code+Pro&display=swap');
+
+.sort-button{
+    top: 0;
+    left: 0;
+    width: 170px;
+    height: 50px;
+    background-color: turquoise;
+    color: white;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    font-family: 'Source Code Pro', monospace;
+    transition: all 0.2s;
+}
+.sort-button:hover {
+    background-color: black;
+    color: turquoise;
+}
 *{
     margin: 0;
     padding: 0;
@@ -158,12 +193,10 @@ export default {
     justify-content: space-evenly;
     align-items:baseline;
 }
-.arr-bar{
-    
+.arr-bar{   
     background-color: turquoise;
     width:5px;
 }
-
 .reset-arr{
     top:0;
     left:0;
@@ -180,6 +213,9 @@ export default {
 .reset-arr:hover{
    background-color:black;
    color:turquoise;
+}
+.selected{
+    background-color:red;
 }
 .disabled{
     background-color: rgb(255, 255, 255);
@@ -224,9 +260,7 @@ footer{
     color:white;
     font-size:1.2rem;
     font-family: 'Source Code Pro', monospace;
-
 }
-/*Chrome*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     input[type='range'] {
         overflow: hidden;
