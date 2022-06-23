@@ -1,7 +1,7 @@
 export default function getanimationbubble(array){
     const animations = [];
     if (array.length <= 1) return array;
-    bubbleSortHelper(array,animations);
+   bubbleSortHelper(array,animations);
     return animations;
 }
 function bubbleSortHelper(array,animations){

@@ -6,7 +6,7 @@ export default function getMergeSortAnimations(array) {
     return animations;
 }
 
-function mergeSortHelper(
+ function mergeSortHelper(
     mainArray,
     startIdx,
     endIdx,
