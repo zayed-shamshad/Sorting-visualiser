@@ -1,6 +1,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Source+Code+Pro&display=swap');
-
+.labelslider{
+    font-family: 'Source Code Pro', monospace;
+    font-size:1rem;
+}
 .sort-button {
     top: 0;
     left: 0;
@@ -209,7 +212,7 @@ export default {
    waitforme(milisec) {
      return new Promise(resolve => {
              setTimeout(() => { resolve('') }, milisec);
-                })
+             })
             },
     async  bubblesort()
         {
@@ -258,7 +261,6 @@ export default {
                
             }
             console.log("executed merge sort");
-
         },
         randomnumber(a,b)
         {
@@ -295,21 +297,25 @@ export default {
             <button @click="setvalue('bubble');addclass('bubble')" class="reset-arr" id="bubble">
                 bubble
             </button>
-            <button @click="setvalue('bubble');addclass('selection')" class="reset-arr" id="selection">
+            <!-- <button @click="setvalue('merge');addclass('selection')" class="reset-arr" id="selection">
                 selection
-            </button>
-            <button @click="setvalue('bubble');addclass('heap')" class="reset-arr" id="heap">
+            </button> -->
+            <!-- <button @click="setvalue('merge');addclass('heap')" class="reset-arr" id="heap">
                 heap
-            </button>
+            </button> -->
             <button @click="sort" class="sort-button">
                 sort
             </button>
         </div>
         <div class="slider">
-            <input slider type="range" min="1/10" max="100" v-model="speed" class="sliders" />
+            <label class="labelslider">speed
+                <input slider type="range" min="1" max="100" v-model="speed" class="sliders" />
+            </label>
         </div>
         <div class="slider">
-            <input slider type="range" min="9" max="160" v-model="size" class="sliders" />
+            <label class="labelslider">size
+                <input slider type="range" min="9" max="160" v-model="size" class="sliders" />
+            </label>
         </div>
     </navbar>
     <div class="arr-container">
