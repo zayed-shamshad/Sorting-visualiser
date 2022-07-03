@@ -152,6 +152,7 @@ footer {
 <script>
 import getMergeSortAnimations from './components/mergesortalgo.js';
 import getanimationbubble from './components/bubblesortalgo.js';
+import getanimationselection from './components/selectionsortalgo.js';
 export default {
   name: 'App',
     data() {
@@ -182,6 +183,7 @@ export default {
         document.getElementsByClassName("sort-button")[0].disabled=true;
         const restarrs=document.getElementsByClassName("reset-arr");
         const slider = document.getElementsByClassName("sliders")
+
         slider[0].disabled=true;
         slider[1].disabled=true;
 
@@ -194,10 +196,13 @@ export default {
             if(this.sortalgo=="merge"){
            await this.mergesort();
             }
-            else if(this.sortalgo=="bubble"){
+            if(this.sortalgo=="bubble"){
            await this.bubblesort();
              console.log("bubble");
             }
+           if (this.sortalgo == "selection") {
+            await this.selectionsort();
+        }
         document.getElementsByClassName("sort-button")[0].disabled=false;
         slider[0].disabled = false;
         slider[1].disabled = false;
@@ -214,6 +219,29 @@ export default {
              setTimeout(() => { resolve('') }, milisec);
              })
             },
+        async selectionsort() {
+            const animations = getanimationselection(this.arr.slice());
+            const arrayBars = document.getElementsByClassName("arr-bar");
+            for (let i = 0; i < animations.length; i++) {
+                const isColorChange = (i % 4 === 0) || (i % 4 === 1);
+                if (isColorChange) {
+                    const [barOneIdx, barTwoIdx] = animations[i];
+                    const barOneStyle = arrayBars[barOneIdx].style;
+                    const barTwoStyle = arrayBars[barTwoIdx].style;
+                    const color = i % 4 === 0 ? 'red' : 'turquoise';
+                    barOneStyle.backgroundColor = color;
+                    barTwoStyle.backgroundColor = color;
+                    await this.waitforme(i * this.speed / 10);
+                }
+                else {
+                    const [barOneIdx, newHeight] = animations[i];
+                    const barOneStyle = arrayBars[barOneIdx].style;
+                    barOneStyle.height = `${newHeight}px`;
+                    await this.waitforme(i * this.speed / 10);
+                }
+            }
+            console.log("executed selection sort");
+        },
     async  bubblesort()
         {
             const animations =  getanimationbubble(this.arr.slice());
@@ -286,7 +314,7 @@ export default {
 }
 </script>
 <template>
-    <navbar class="navbar">
+    <nav class="navbar">
         <div class="buttons">
             <button @click="inarr" class="reset-arr">
                 reset
@@ -297,13 +325,13 @@ export default {
             <button @click="setvalue('bubble');addclass('bubble')" class="reset-arr" id="bubble">
                 bubble
             </button>
-            <!-- <button @click="setvalue('merge');addclass('selection')" class="reset-arr" id="selection">
+            <button @click="setvalue('selection');addclass('selection')" class="reset-arr" id="selection">
                 selection
-            </button> -->
+            </button>
             <!-- <button @click="setvalue('merge');addclass('heap')" class="reset-arr" id="heap">
                 heap
             </button> -->
-            <button @click="sort" class="sort-button">
+            <button @click="sort" class="sort-button reset-arr">
                 sort
             </button>
         </div>
@@ -317,7 +345,7 @@ export default {
                 <input slider type="range" min="9" max="160" v-model="size" class="sliders" />
             </label>
         </div>
-    </navbar>
+    </nav>
     <div class="arr-container">
         <div v-for="(item,index) in arr" :key="index"
             :style='{"height":`${item}px`,"background-color":"rgb(5, 169, 205)"}' class="arr-bar">
