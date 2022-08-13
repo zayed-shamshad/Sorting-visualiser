@@ -1,4 +1,7 @@
 <style>
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Source+Code+Pro&display=swap');
 .labelslider{
     font-family: 'Source Code Pro', monospace;
@@ -107,6 +110,20 @@
     justify-content: center;
     min-width: 150px;
     min-height: 50px;
+}
+.slider div{
+    font-family: 'Source Code Pro', monospace;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: row;
+    width:20vw;
+    height:1vh;
+    padding:10px;
+    font-size: 2vw;
+}
+.slider div div{
+    font-size: 15px;
 }
 
 footer {
@@ -339,6 +356,10 @@ export default {
             <label class="labelslider">speed
                 <input slider type="range" min="1" max="100" v-model="speed" class="sliders" />
             </label>
+            <div>
+                <div>high</div>
+                <div>low</div>
+            </div>
         </div>
         <div class="slider">
             <label class="labelslider">size
